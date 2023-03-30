@@ -65,6 +65,15 @@ def HD_metric(targets, preds):
 
 # weights_default = "./KnotsFromContours42tree/models/20221017-113629/new_contour_model_149/epoch_149.ckpt"
 def parse():
+    print(
+        """
+    inference.py  Copyright (C) 2023  Anonymous
+    This program comes with ABSOLUTELY NO WARRANTY;
+    This is free software, and you are welcome to redistribute it
+    under certain conditions;
+            """
+    )
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--input_path",

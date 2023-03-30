@@ -28,6 +28,15 @@ from unet import Unet_seq
 
 
 def parse():
+    print(
+        """
+    train_sequence.py  Copyright (C) 2023  Anonymous
+    This program comes with ABSOLUTELY NO WARRANTY;
+    This is free software, and you are welcome to redistribute it
+    under certain conditions;
+            """
+    )
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--model_name", choices=["ConvLSTM", "UNet", "SegNet"], required=True
