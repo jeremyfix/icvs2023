@@ -7,6 +7,7 @@ import datetime
 from models import ConvLSTM
 from samplers import SequenceDataset
 from utils import video_summary
+from ConvLSTM_B import ConvLSTM
 from ConvLSTM_utils import convlstm 
 weights = "./KnotsFromContours42tree/models/20221017-113629/new_contour_model_149/epoch_149.ckpt"
 
