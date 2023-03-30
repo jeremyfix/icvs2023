@@ -68,12 +68,13 @@ def parse():
         default="./KnotsFromContours_v3/models/20221122-201224/new_contour_model_299/epoch_299.ckpt",
     )
     parser.add_argument("--species", type=str, default="sapin")
-    parser.add_argument("--iterations", type=int, default=3)
     parser.add_argument("--save_img", action="store_true")
     parser.add_argument(
         "--descriptor",
         type=str,
         default="./Sequences_pipeline/knots_contours/input/descriptors/KnotsFromContours/desc_train.json",
     )
-    parser.add_argument("--model", type=str, default="ConvLSTM")
+    parser.add_argument(
+        "--model", choices=["Unet", "SegNet", "ConvLSTM"], default="ConvLSTM"
+    )
     return parser.parse_args()
