@@ -4,7 +4,7 @@ import numpy as np
 import tensorflow as tf
 import datetime
 from models import SegNetSeq
-from samplers import SequenceImageSampler
+from samplers import SequenceDataset
 from utils import video_summary
 
 # weights = "./KnotsFromContours42tree/models/20221017-113629/new_contour_model_149/epoch_149.ckpt"
@@ -22,8 +22,8 @@ def parse():
 
 args = parse()
 
-TRN_SIS = SequenceImageSampler(args.train_path)
-VAL_SIS = SequenceImageSampler(args.val_path)
+TRN_SIS = SequenceDataset(args.train_path)
+VAL_SIS = SequenceDataset(args.val_path)
 # model = SimpleConvLSTM3(TRN_SIS._info['seq_size'],TRN_SIS._info['input_shape'][0],TRN_SIS._info['input_shape'][1],0.2)
 model = SegNetSeq(
     TRN_SIS._info["seq_size"],
@@ -56,12 +56,8 @@ val_meaniou = tf.keras.metrics.MeanIoU(2, name="val_meanIoU", dtype=tf.float32)
 def train_step(model, optimizer, x_train, y_train):
     with tf.GradientTape() as tape:
         y_train = y_train / 255
-        # print(np.unique(y_train))
         predictions = model(x_train, training=True)
         loss = loss_object(y_train, predictions)
-        # weights = tf.squeeze((tf.cast(y_train == 0,tf.float32)*0.02 + tf.cast(y_train == 1,tf.float32)*0.98))
-        # wloss = tf.reduce_mean(loss*weights)
-    # print(predictions)
     grads = tape.gradient(loss, model.trainable_variables)
     optimizer.apply_gradients(zip(grads, model.trainable_variables))
     train_loss(tf.reduce_mean(loss))
