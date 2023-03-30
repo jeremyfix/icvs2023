@@ -13,7 +13,6 @@ weights = "./KnotsFromContours_SegNet_2/models/20230118-135815/new_contour_model
 
 def parse():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model_name", type=str)
     parser.add_argument("--train_path", type=str)
     parser.add_argument("--val_path", type=str)
     parser.add_argument("--output_path", type=str, default=".")
