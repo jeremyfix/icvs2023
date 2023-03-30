@@ -101,7 +101,7 @@ val_summary_writer = tf.summary.create_file_writer(test_log_dir)
 batch_size = 4
 max_steps = TRN_SIS.num_samples // batch_size
 max_steps_prct = max_steps // 10
-EPOCHS = 300  # 150
+EPOCHS = 150
 
 max_outputs = 4
 for epoch in range(EPOCHS):
