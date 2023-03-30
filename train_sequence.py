@@ -7,16 +7,19 @@ import datetime
 from samplers import SequenceDataset
 from utils import video_summary
 from ConvLSTM_utils import convlstm
-
-weights = "./KnotsFromContours42tree/models/20221017-113629/new_contour_model_149/epoch_149.ckpt"
+from models import SegNetSeq
+from unet import Unet_seq
 
 
 def parse():
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--model_name", choices=["ConvLSTM", "UNet", "SegNet"], required=True
+    )
     parser.add_argument("--train_path", type=str)
     parser.add_argument("--val_path", type=str)
     parser.add_argument("--output_path", type=str, default=".")
-    parser.add_argument("--weights", action="store_true", default=False)
+    parser.add_argument("--weights", type=str, default=None)
     return parser.parse_args()
 
 
@@ -24,14 +27,32 @@ args = parse()
 
 TRN_SIS = SequenceDataset(args.train_path)
 VAL_SIS = SequenceDataset(args.val_path)
-model = convlstm(
-    TRN_SIS._info["seq_size"],
-    TRN_SIS._info["input_shape"][0],
-    TRN_SIS._info["input_shape"][1],
-    0.2,
-)
-if args.weights:
-    model.load_weights(weights)
+
+if args.model_name == "ConvLSTM":
+    model = convlstm(
+        TRN_SIS._info["seq_size"],
+        TRN_SIS._info["input_shape"][0],
+        TRN_SIS._info["input_shape"][1],
+        0.2,
+    )
+    batch_size = 10
+elif args.model_name == "UNet":
+    model = Unet_seq(
+        TRN_SIS._info["seq_size"],
+        TRN_SIS._info["input_shape"][0],
+        TRN_SIS._info["input_shape"][1],
+    )
+    batch_size = 4
+elif args.model_name == "SegNet":
+    model = SegNetSeq(
+        TRN_SIS._info["seq_size"],
+        TRN_SIS._info["input_shape"][0],
+        TRN_SIS._info["input_shape"][1],
+    )
+    batch_size = 4
+
+if args.weights is not None:
+    model.load_weights(args.weights)
 
 train_ds = TRN_SIS.getDataset()
 val_ds = VAL_SIS.getDataset()
@@ -98,10 +119,9 @@ test_log_dir = os.path.join(args.output_path, "tensorboard/" + current_time + "/
 train_summary_writer = tf.summary.create_file_writer(train_log_dir)
 val_summary_writer = tf.summary.create_file_writer(test_log_dir)
 
-batch_size = 10
 max_steps = TRN_SIS.num_samples // batch_size
 max_steps_prct = max_steps // 10
-EPOCHS = 150  # 300
+EPOCHS = 150
 
 max_outputs = 4
 for epoch in range(EPOCHS):
