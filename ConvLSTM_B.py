@@ -1,26 +1,51 @@
 import tensorflow as tf
 from tensorflow.keras import layers, Sequential
 
+
 class ConvLSTMEnc(tf.keras.layers.Layer):
     def __init__(self, droprate):
         super(ConvLSTMEnc, self).__init__()
 
-        self.bloc1conv1 =   layers.Bidirectional(layers.ConvLSTM2D(32, 3, padding='same', activation='relu', return_sequences=True))
-        self.bloc1conv2 =   layers.Bidirectional(layers.ConvLSTM2D(32, 3, padding='same', activation='relu', return_sequences=True))
+        self.bloc1conv1 = layers.Bidirectional(
+            layers.ConvLSTM2D(
+                32, 3, padding="same", activation="relu", return_sequences=True
+            )
+        )
+        self.bloc1conv2 = layers.Bidirectional(
+            layers.ConvLSTM2D(
+                32, 3, padding="same", activation="relu", return_sequences=True
+            )
+        )
         self.bloc1maxpool = layers.TimeDistributed(layers.MaxPooling2D())
 
-        self.bloc2conv1 =   layers.Bidirectional(layers.ConvLSTM2D(48, 3, padding='same', activation='relu', return_sequences=True))
-        self.bloc2conv2 =   layers.Bidirectional(layers.ConvLSTM2D(48, 3, padding='same', activation='relu', return_sequences=True))
+        self.bloc2conv1 = layers.Bidirectional(
+            layers.ConvLSTM2D(
+                48, 3, padding="same", activation="relu", return_sequences=True
+            )
+        )
+        self.bloc2conv2 = layers.Bidirectional(
+            layers.ConvLSTM2D(
+                48, 3, padding="same", activation="relu", return_sequences=True
+            )
+        )
         self.bloc2maxpool = layers.TimeDistributed(layers.MaxPooling2D())
 
-        self.bloc3conv1 =   layers.Bidirectional(layers.ConvLSTM2D(64, 3, padding='same', activation='relu', return_sequences=True))
-        self.bloc3conv2 =   layers.Bidirectional(layers.ConvLSTM2D(64, 3, padding='same', activation='relu', return_sequences=True))
-        self.bloc3maxpool = layers.TimeDistributed(layers.MaxPooling2D()) 
+        self.bloc3conv1 = layers.Bidirectional(
+            layers.ConvLSTM2D(
+                64, 3, padding="same", activation="relu", return_sequences=True
+            )
+        )
+        self.bloc3conv2 = layers.Bidirectional(
+            layers.ConvLSTM2D(
+                64, 3, padding="same", activation="relu", return_sequences=True
+            )
+        )
+        self.bloc3maxpool = layers.TimeDistributed(layers.MaxPooling2D())
 
-        self.droplayer = layers.TimeDistributed(layers.Dropout(droprate)) 
+        self.droplayer = layers.TimeDistributed(layers.Dropout(droprate))
 
     def compute_output_shape(self, input_shape):
-        return ((input_shape[0],input_shape[1]//8,input_shape[2]//8,64))
+        return (input_shape[0], input_shape[1] // 8, input_shape[2] // 8, 64)
 
     def build(self, input_shape):
         super(ConvLSTMEnc, self).build(input_shape)
@@ -43,38 +68,48 @@ class ConvLSTMEnc(tf.keras.layers.Layer):
 
         return output
 
+
 class ConvLSTMDec(tf.keras.layers.Layer):
     def __init__(self, droprate):
         super(ConvLSTMDec, self).__init__()
 
         self.droplayer = layers.TimeDistributed(layers.Dropout(droprate))
 
-        self.bloc1upsamp =  layers.TimeDistributed(layers.UpSampling2D())
-        self.bloc1conv1 =   layers.TimeDistributed(layers.Conv2DTranspose(64, 3, padding='same', activation='relu'))
-        self.bloc1conv2 =   layers.TimeDistributed(layers.Conv2DTranspose(64, 3, padding='same', activation='relu'))
+        self.bloc1upsamp = layers.TimeDistributed(layers.UpSampling2D())
+        self.bloc1conv1 = layers.TimeDistributed(
+            layers.Conv2DTranspose(64, 3, padding="same", activation="relu")
+        )
+        self.bloc1conv2 = layers.TimeDistributed(
+            layers.Conv2DTranspose(64, 3, padding="same", activation="relu")
+        )
 
+        self.bloc2upsamp = layers.TimeDistributed(layers.UpSampling2D())
+        self.bloc2conv1 = layers.TimeDistributed(
+            layers.Conv2DTranspose(48, 3, padding="same", activation="relu")
+        )
+        self.bloc2conv2 = layers.TimeDistributed(
+            layers.Conv2DTranspose(48, 3, padding="same", activation="relu")
+        )
 
-        self.bloc2upsamp =  layers.TimeDistributed(layers.UpSampling2D())
-        self.bloc2conv1 =   layers.TimeDistributed(layers.Conv2DTranspose(48, 3, padding='same', activation='relu'))
-        self.bloc2conv2 =   layers.TimeDistributed(layers.Conv2DTranspose(48, 3, padding='same', activation='relu'))
-
-
-        self.bloc3upsamp =  layers.TimeDistributed(layers.UpSampling2D())
-        self.bloc3conv1 =   layers.TimeDistributed(layers.Conv2DTranspose(32, 3, padding='same', activation='relu'))
-        self.bloc3conv2 =   layers.TimeDistributed(layers.Conv2DTranspose(32, 3, padding='same', activation='relu'))
-
+        self.bloc3upsamp = layers.TimeDistributed(layers.UpSampling2D())
+        self.bloc3conv1 = layers.TimeDistributed(
+            layers.Conv2DTranspose(32, 3, padding="same", activation="relu")
+        )
+        self.bloc3conv2 = layers.TimeDistributed(
+            layers.Conv2DTranspose(32, 3, padding="same", activation="relu")
+        )
 
     def compute_output_shape(self, input_shape):
-        return (input_shape[0],input_shape[1]*8,input_shape[2]*8,32)
+        return (input_shape[0], input_shape[1] * 8, input_shape[2] * 8, 32)
 
     def build(self, input_shape):
-        #self.kernel = self.add_weight(name='kernel', shape=(input_shape[1], self.output_dim),initializer='uniform',trainable=True)
+        # self.kernel = self.add_weight(name='kernel', shape=(input_shape[1], self.output_dim),initializer='uniform',trainable=True)
         super(ConvLSTMDec, self).build(input_shape)
 
     def call(self, inputs):
 
         x0 = self.droplayer(inputs, training=True)
-        
+
         x1 = self.bloc1upsamp(x0)
         x2 = self.bloc1conv1(x1)
         x3 = self.bloc1conv2(x2)
@@ -89,21 +124,28 @@ class ConvLSTMDec(tf.keras.layers.Layer):
 
         return x9
 
-def convlstm(seq_size, img_height, img_width, droprate): 
-    model = Sequential([
-        ConvLSTMEnc(droprate), 
-        layers.ConvLSTM2D(64, 3, padding='same', return_sequences=True),
-        ConvLSTMDec(droprate),
-        layers.TimeDistributed(layers.Conv2DTranspose(2, 1, padding='same', activation='sigmoid'))])
+
+def convlstm(seq_size, img_height, img_width, droprate):
+    model = Sequential(
+        [
+            ConvLSTMEnc(droprate),
+            layers.ConvLSTM2D(64, 3, padding="same", return_sequences=True),
+            ConvLSTMDec(droprate),
+            layers.TimeDistributed(
+                layers.Conv2DTranspose(2, 1, padding="same", activation="sigmoid")
+            ),
+        ]
+    )
     model.build((None, seq_size, img_height, img_width, 1))
-    return model 
+    return model
+
 
 if __name__ == "__main__":
-    #model = Sequential([
-    #    ConvLSTMEnc(0.1), 
+    # model = Sequential([
+    #    ConvLSTMEnc(0.1),
     #    layers.ConvLSTM2D(64, 3, padding='same', return_sequences=True),
     #    ConvLSTMDec(0.1),
     #    layers.TimeDistributed(layers.Conv2DTranspose(2, 1, padding='same', activation='sigmoid'))])
-    ##model = Unet_seq(40, 192, 192)
+    # model = Unet_seq(40, 192, 192)
     model = convlstm(40, 192, 192, 0.1)
     model.summary()
