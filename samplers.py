@@ -8,8 +8,8 @@ import tensorflow as tf
 
 
 def HistogramCut(img, shift=0.0, cap=1.0):
-    ### restrict the histogram to a rante between 'shift' and 'cap'
-    ## should be between 0. and 1., with shift < cap
+    # restrict the histogram to a rante between 'shift' and 'cap'
+    # should be between 0. and 1., with shift < cap
     img = img.copy()
     img[img > cap] = cap
 
@@ -22,7 +22,7 @@ def HistogramCut(img, shift=0.0, cap=1.0):
 
 
 def Normalize(img):
-    ### spread an image histogram over the bit range
+    # spread an image histogram over the bit range
     # print (NP.amin(img), NP.amax(img))
     img = img.copy()
 
@@ -34,7 +34,7 @@ def Normalize(img):
 
 
 def Equalize(img):
-    ### Performs adaptative equalization
+    # Performs adaptative equalization
     ada = Normalize(img.copy())
     ada = ski.exposure.equalize_adapthist(ada, clip_limit=0.02)
     ada = Normalize(ada)
