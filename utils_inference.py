@@ -60,8 +60,7 @@ def parse():
         type=str,
         default="./Sequences_pipeline/knots_contours/input/datasets/knots/",
     )
-    parser.add_argument("--thresh", type=float, default=0.5)  # Adding Threshold
-    parser.add_argument("--output", type=str)
+    parser.add_argument("--output", type=str, default="outputs")
     parser.add_argument(
         "--weights",
         type=str,
