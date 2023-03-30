@@ -5,16 +5,16 @@ class ConvLSTMEnc(tf.keras.layers.Layer):
     def __init__(self, droprate):
         super(ConvLSTMEnc, self).__init__()
 
-        self.bloc1conv1 =   layers.ConvLSTM2D(32, 3, padding='same', activation='relu', return_sequences=True)
-        self.bloc1conv2 =   layers.ConvLSTM2D(32, 3, padding='same', activation='relu', return_sequences=True)
+        self.bloc1conv1 =   layers.ConvLSTM2D(32, 3, padding='same', activation='relu', return_sequences=True, go_backwards=True)
+        self.bloc1conv2 =   layers.ConvLSTM2D(32, 3, padding='same', activation='relu', return_sequences=True, go_backwards=True)
         self.bloc1maxpool = layers.TimeDistributed(layers.MaxPooling2D())
 
-        self.bloc2conv1 =   layers.ConvLSTM2D(48, 3, padding='same', activation='relu', return_sequences=True)
-        self.bloc2conv2 =   layers.ConvLSTM2D(48, 3, padding='same', activation='relu', return_sequences=True)
+        self.bloc2conv1 =   layers.ConvLSTM2D(48, 3, padding='same', activation='relu', return_sequences=True, go_backwards=True)
+        self.bloc2conv2 =   layers.ConvLSTM2D(48, 3, padding='same', activation='relu', return_sequences=True, go_backwards=True)
         self.bloc2maxpool = layers.TimeDistributed(layers.MaxPooling2D())
 
-        self.bloc3conv1 =   layers.ConvLSTM2D(64, 3, padding='same', activation='relu', return_sequences=True)
-        self.bloc3conv2 =   layers.ConvLSTM2D(64, 3, padding='same', activation='relu', return_sequences=True)
+        self.bloc3conv1 =   layers.ConvLSTM2D(64, 3, padding='same', activation='relu', return_sequences=True, go_backwards=True)
+        self.bloc3conv2 =   layers.ConvLSTM2D(64, 3, padding='same', activation='relu', return_sequences=True, go_backwards=True)
         self.bloc3maxpool = layers.TimeDistributed(layers.MaxPooling2D()) 
 
         self.droplayer = layers.TimeDistributed(layers.Dropout(droprate)) 
