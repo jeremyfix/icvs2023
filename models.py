@@ -21,7 +21,8 @@ import tensorflow as tf
 # Local import
 from ConvLSTM_utils import ConvLSTMencode, ConvLSTMdecode
 from SegNetSeq_utils import SegNetencode, SegNetdecode
-from CBAM import CBAMblock
+
+# from CBAM import CBAMblock
 
 
 def ConvLSTM(seq_size, img_height, img_width, droprate):
