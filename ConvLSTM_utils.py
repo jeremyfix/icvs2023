@@ -18,9 +18,9 @@ import tensorflow as tf
 from tensorflow.keras import layers, Sequential
 
 
-class ConvLSTMEnc(tf.keras.layers.Layer):
+class ConvLSTMencode(tf.keras.layers.Layer):
     def __init__(self, droprate):
-        super(ConvLSTMEnc, self).__init__()
+        super(ConvLSTMencode, self).__init__()
 
         self.bloc1conv1 = layers.ConvLSTM2D(
             32,
@@ -103,9 +103,9 @@ class ConvLSTMEnc(tf.keras.layers.Layer):
         return output
 
 
-class ConvLSTMDec(tf.keras.layers.Layer):
+class ConvLSTMdecode(tf.keras.layers.Layer):
     def __init__(self, droprate):
-        super(ConvLSTMDec, self).__init__()
+        super(ConvLSTMdecode, self).__init__()
 
         self.droplayer = layers.TimeDistributed(layers.Dropout(droprate))
 
