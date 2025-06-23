@@ -251,8 +251,14 @@ class SequenceDataset(SimpleDataset):
 
     def _loadInfo(self, path):
         self._info = self._loadDict(path)
-        self._img_list = self._info["img_list_path"]
-        self._lbl_list = self._info["lbl_list_path"]
+        # TODO: why this fix was necessary ??
+        # Is this version of the code the latest ? Otherwise _generate_sequences() will fail
+        # because the img_list and lbl_list are empty
+        # But the super class also has a _loadInfo method, so it is not clear why this is necessary
+        # self._img_list = self._info["img_list_path"]
+        # self._lbl_list = self._info["lbl_list_path"]
+        self._img_list = self._loadList(self._info["img_list_path"])
+        self._lbl_list = self._loadList(self._info["lbl_list_path"])
         self.seq_size = self._info["seq_size"]
         self.reversed_mode = self._info["reversed_mode"]
         self._generate_sequences()
