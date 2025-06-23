@@ -169,38 +169,38 @@ for epoch in range(EPOCHS):
                 )
             )
             with train_summary_writer.as_default():
-                video_summary(
-                    "prediction",
-                    model(x_train).numpy()[:3],
-                    step=epoch * max_steps + step,
-                )
-                video_summary(
-                    "ground_truth", y_train.numpy()[:3], step=epoch * max_steps + step
-                )
-                overlay = tf.dtypes.cast(
-                    (x_train[:3] - np.min(x_train[:3]))
-                    / (np.max(x_train[:3]) - np.min(x_train[:3]))
-                    * 255,
-                    tf.uint8,
-                ).numpy()
-                overlay = np.concatenate((overlay,) * 3, axis=-1)  # convert to rgb
-                overlay[:, :, :, :, 1] = y_train.numpy()[:3, :, :, :, 0]
-                video_summary(
-                    "groundtruth_with_overlay", overlay, step=epoch * max_steps + step
-                )
-                overlay = tf.dtypes.cast(
-                    (x_train[:3] - np.min(x_train[:3]))
-                    / (np.max(x_train[:3]) - np.min(x_train[:3]))
-                    * 255,
-                    tf.uint8,
-                ).numpy()
-                overlay = np.concatenate((overlay,) * 3, axis=-1)  # convert to rgb
-                overlay[:, :, :, :, 1] = np.max(
-                    tf.dtypes.cast(255 * model(x_train[:3]), tf.uint8).numpy(), axis=-1
-                )
-                video_summary(
-                    "prediction_with_overlay", overlay, step=epoch * max_steps + step
-                )
+                # video_summary(
+                #     "prediction",
+                #     model(x_train).numpy()[:3],
+                #     step=epoch * max_steps + step,
+                # )
+                # video_summary(
+                #     "ground_truth", y_train.numpy()[:3], step=epoch * max_steps + step
+                # )
+                # overlay = tf.dtypes.cast(
+                #     (x_train[:3] - np.min(x_train[:3]))
+                #     / (np.max(x_train[:3]) - np.min(x_train[:3]))
+                #     * 255,
+                #     tf.uint8,
+                # ).numpy()
+                # overlay = np.concatenate((overlay,) * 3, axis=-1)  # convert to rgb
+                # overlay[:, :, :, :, 1] = y_train.numpy()[:3, :, :, :, 0]
+                # video_summary(
+                #     "groundtruth_with_overlay", overlay, step=epoch * max_steps + step
+                # )
+                # overlay = tf.dtypes.cast(
+                #     (x_train[:3] - np.min(x_train[:3]))
+                #     / (np.max(x_train[:3]) - np.min(x_train[:3]))
+                #     * 255,
+                #     tf.uint8,
+                # ).numpy()
+                # overlay = np.concatenate((overlay,) * 3, axis=-1)  # convert to rgb
+                # overlay[:, :, :, :, 1] = np.max(
+                #     tf.dtypes.cast(255 * model(x_train[:3]), tf.uint8).numpy(), axis=-1
+                # )
+                # video_summary(
+                #     "prediction_with_overlay", overlay, step=epoch * max_steps + step
+                # )
                 tf.summary.scalar(
                     "loss", train_loss.result(), step=epoch * max_steps + step
                 )
@@ -212,9 +212,9 @@ for epoch in range(EPOCHS):
                 )
                 tf.summary.flush()
 
-                train_loss.reset_states()
-                train_accuracy.reset_states()
-                train_meaniou.reset_states()
+                train_loss.reset_state()
+                train_accuracy.reset_state()
+                train_meaniou.reset_state()
 
     for (x_val, y_val) in val_ds.batch(batch_size):
         val_step(model, x_val, y_val)
@@ -224,25 +224,25 @@ for epoch in range(EPOCHS):
             "accuracy", val_accuracy.result(), step=epoch * max_steps + step
         )
         tf.summary.scalar("miou", val_meaniou.result(), step=epoch * max_steps + step)
-        video_summary(
-            "test_prediction", model(x_val).numpy(), step=epoch * max_steps + step
-        )
-        video_summary("test_ground_truth", y_val.numpy(), step=epoch * max_steps + step)
-        overlay = tf.dtypes.cast(x_val / 256, tf.uint8).numpy()
-        overlay = np.concatenate((overlay,) * 3, axis=-1)  # convert to rgb
-        overlay[:, :, :, :, 1] = y_val.numpy()[:, :, :, :, 0]
-        video_summary(
-            "test_groundtruth_with_overlay", overlay, step=epoch * max_steps + step
-        )
-        overlay = tf.dtypes.cast(x_val / 256, tf.uint8).numpy()
-        overlay = np.concatenate((overlay,) * 3, axis=-1)  # convert to rgb
-        overlay[:, :, :, :, 1] = np.max(
-            tf.dtypes.cast(255 * model(x_val), tf.uint8).numpy(), axis=-1
-        )
-        # print(np.max(overlay),np.max(np.max(tf.dtypes.cast(255*model(x_train), tf.uint8).numpy(), axis=-1)))
-        video_summary(
-            "test_prediction_with_overlay", overlay, step=epoch * max_steps + step
-        )
+        # video_summary(
+        #     "test_prediction", model(x_val).numpy(), step=epoch * max_steps + step
+        # )
+        # video_summary("test_ground_truth", y_val.numpy(), step=epoch * max_steps + step)
+        # overlay = tf.dtypes.cast(x_val / 256, tf.uint8).numpy()
+        # overlay = np.concatenate((overlay,) * 3, axis=-1)  # convert to rgb
+        # overlay[:, :, :, :, 1] = y_val.numpy()[:, :, :, :, 0]
+        # video_summary(
+        #     "test_groundtruth_with_overlay", overlay, step=epoch * max_steps + step
+        # )
+        # overlay = tf.dtypes.cast(x_val / 256, tf.uint8).numpy()
+        # overlay = np.concatenate((overlay,) * 3, axis=-1)  # convert to rgb
+        # overlay[:, :, :, :, 1] = np.max(
+        #     tf.dtypes.cast(255 * model(x_val), tf.uint8).numpy(), axis=-1
+        # )
+        # # print(np.max(overlay),np.max(np.max(tf.dtypes.cast(255*model(x_train), tf.uint8).numpy(), axis=-1)))
+        # video_summary(
+        #     "test_prediction_with_overlay", overlay, step=epoch * max_steps + step
+        # )
 
     template = "Epoch {}, Loss: {}, Pixel-Accuracy: {}, Test Loss: {}, Test Pixel-Accuracy: {}, Train MeanIoU: {}, Val MeanIoU:{}, Val MeanF1: {}"
     print(
@@ -260,10 +260,10 @@ for epoch in range(EPOCHS):
     )
 
     # Reset metrics every epoch
-    val_loss.reset_states()
-    val_accuracy.reset_states()
-    val_meaniou.reset_states()
-    train_meaniou.reset_states()
+    val_loss.reset_state()
+    val_accuracy.reset_state()
+    val_meaniou.reset_state()
+    train_meaniou.reset_state()
     model.save(
         os.path.join(
             args.output_path, "models", current_time, "new_contour_model_" + str(epoch)
