@@ -16,6 +16,6 @@ uv pip install scipy numpy tensorflow[and-cuda] opencv-python-headless scikit-im
 
 # Training
 
-python train_sequence.py --model_name UNet --train_path train.json --val_path valid.json
-# python train_sequence.py --model_name ConvLSTM --train_path train.json --val_path valid.json
-# python train_sequence.py --model_name SegNet --train_path train.json --val_path valid.json
+python train_sequence.py --model_name UNet --train_path train.json --val_path val.json
+# python train_sequence.py --model_name ConvLSTM --train_path train.json --val_path val.json
+# python train_sequence.py --model_name SegNet --train_path train.json --val_path val.json
