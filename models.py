@@ -36,7 +36,7 @@ def ConvLSTM(seq_size, img_height, img_width, droprate):
             layers.ConvLSTM2D(64, 3, padding="same", return_sequences=True),
             layers.TimeDistributed(ConvLSTMdecode(droprate)),
             layers.TimeDistributed(
-                layers.Conv2DTranspose(2, 1, padding="same", activation="sigmoid")
+                layers.Conv2DTranspose(1, 1, padding="same", activation="sigmoid")
             ),
         ]
     )
@@ -52,7 +52,7 @@ def SegNetSeq(seq_size, img_height, img_width):
             ),
             layers.TimeDistributed(SegNetdecode()),
             layers.TimeDistributed(
-                layers.Conv2DTranspose(2, 1, padding="same", activation="sigmoid")
+                layers.Conv2DTranspose(1, 1, padding="same", activation="sigmoid")
             ),
         ]
     )

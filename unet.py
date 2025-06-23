@@ -118,7 +118,7 @@ def Unet_seq(seq_size, img_height, img_width):
     )(conv_7)
 
     output = layers.TimeDistributed(
-        layers.Conv2DTranspose(2, 1, padding="same", activation="sigmoid")
+        layers.Conv2DTranspose(1, 1, padding="same", activation="sigmoid")
     )(conv_7)
     # output = layers.TimeDistributed(layers.Conv2D(2, 1, padding="same", activation='softmax'))(conv_7)
     model = Model(inputs=[inputs], outputs=[output], name="Unet")
