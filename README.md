@@ -16,7 +16,7 @@ with `uv` :
 ```bash
 uv venv venv
 source venv/bin/activate
-uv pip install json scipy numpy tensorflow opencv-python-headless scikit-image
+uv pip install scipy numpy tensorflow opencv-python-headless scikit-image
 
 ```
 
