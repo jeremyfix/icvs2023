@@ -9,12 +9,15 @@ The data have been split into a training fold and a validation fold. These two f
 
 ## Dependencies
 
-You can install the required dependencies in a virtualenvironment using the provided `requirements.txt` file.
+You can install the required dependencies in a virtual environment :
 
-```
-virtualenv -p python3 venv
-source venv/bin/activate 
-python -m pip install -r requirement.txt
+with `uv` :
+
+```bash
+uv venv venv
+source venv/bin/activate
+uv pip install json scipy numpy tensorflow opencv-python-headless scikit-image
+
 ```
 
 ## Training a network
