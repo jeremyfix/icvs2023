@@ -266,13 +266,16 @@ for epoch in range(EPOCHS):
     train_meaniou.reset_state()
     model.save(
         os.path.join(
-            args.output_path, "models", current_time, "new_contour_model_" + str(epoch)
+            args.output_path,
+            "models",
+            current_time,
+            "new_contour_model_" + str(epoch) + ".h5",
         )
     )
     checkpoint_path = os.path.join(
         args.output_path,
         "models",
         current_time,
-        "new_contour_model_" + str(epoch) + "/epoch_" + str(epoch) + ".ckpt",
+        "new_contour_model_" + str(epoch) + "/epoch_" + str(epoch) + ".h5",
     )
     model.save_weights(checkpoint_path)
