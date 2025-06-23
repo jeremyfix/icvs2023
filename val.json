@@ -1,6 +1,6 @@
 {
-    "img_list_path": "datasets/train_imgs.txt",
-    "lbl_list_path": "datasets/train_labels.txt",
+    "img_list_path": "datasets/val_imgs.txt",
+    "lbl_list_path": "datasets/val_labels.txt",
     "seq_size": 40,
     "input_shape": [192, 192],
     "output_shape": [192, 192],
