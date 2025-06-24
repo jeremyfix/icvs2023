@@ -272,10 +272,10 @@ for epoch in range(EPOCHS):
             "new_contour_model_" + str(epoch) + ".h5",
         )
     )
-    checkpoint_path = os.path.join(
-        args.output_path,
-        "models",
-        current_time,
-        "new_contour_model_" + str(epoch) + "/epoch_" + str(epoch) + ".weights.h5",
-    )
-    model.save_weights(checkpoint_path)
+    # checkpoint_path = os.path.join(
+    #    args.output_path,
+    #    "models",
+    #    current_time,
+    #    "new_contour_model_" + str(epoch) + "/epoch_" + str(epoch) + ".weights.h5",
+    # )
+    # model.save_weights(checkpoint_path)
