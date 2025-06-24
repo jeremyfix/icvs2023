@@ -4,6 +4,6 @@
     "seq_size": 40,
     "input_shape": [192, 192],
     "output_shape": [192, 192],
-    "num_samples": 100,
+    "num_samples": 3424,
     "reversed_mode": false
 }
