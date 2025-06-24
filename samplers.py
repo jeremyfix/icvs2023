@@ -21,6 +21,7 @@ import os
 import random
 import skimage as ski
 import tensorflow as tf
+import tqdm
 
 
 def HistogramCut(img, shift=0.0, cap=1.0):
@@ -79,7 +80,7 @@ class SimpleDataset:
     def _generator(self):
         img_list = self._img_list
         lbl_list = self._lbl_list
-        for i in range(self.num_samples):
+        for i in tqdm.tqdm(range(self.num_samples)):
             img = np.expand_dims(
                 cv2.resize(
                     cv2.imread(img_list[i], 0), dsize=tuple(self._info["input_shape"])

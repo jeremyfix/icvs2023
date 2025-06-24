@@ -3,7 +3,7 @@
 #SBATCH --job-name=icvs
 #SBATCH --nodes=1
 #SBATCH --partition=gpu_prod_long
-#SBATCH --time=10:00:00
+#SBATCH --time=48:00:00
 #SBATCH --output=logslurms/slurm-%A_%a.out
 #SBATCH --error=logslurms/slurm-%A_%a.err
 #SBATCH --exclude=sh00,sh[10-19]
@@ -12,7 +12,7 @@ echo "venv setup"
 
 uv venv $TMPDIR/venv --python=3.11
 source $TMPDIR/venv/bin/activate
-uv pip install scipy numpy tensorflow[and-cuda] opencv-python-headless scikit-image
+uv pip install scipy numpy tensorflow[and-cuda] opencv-python-headless scikit-image tqdm
 
 # Training
 
