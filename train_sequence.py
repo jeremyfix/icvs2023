@@ -276,6 +276,6 @@ for epoch in range(EPOCHS):
         args.output_path,
         "models",
         current_time,
-        "new_contour_model_" + str(epoch) + "/epoch_" + str(epoch) + ".h5",
+        "new_contour_model_" + str(epoch) + "/epoch_" + str(epoch) + ".weights.h5",
     )
     model.save_weights(checkpoint_path)
