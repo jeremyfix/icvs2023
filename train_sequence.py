@@ -61,7 +61,7 @@ if args.model_name == "ConvLSTM":
         TRN_SIS._info["input_shape"][1],
         0.2,
     )
-    batch_size = 10
+    batch_size = 4
 elif args.model_name == "UNet":
     model = Unet_seq(
         TRN_SIS._info["seq_size"],
