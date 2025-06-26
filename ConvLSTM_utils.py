@@ -1,4 +1,4 @@
-# Scripts to train and perform inference of ConvLSTM/UNet/SegNet
+
 # for predicting knots from the contours of trees
 # Copyright (C) 2023 Anonymous
 
@@ -82,7 +82,7 @@ class ConvLSTMencode(tf.keras.layers.Layer):
         return (input_shape[0], input_shape[1] // 8, input_shape[2] // 8, 64)
 
     def build(self, input_shape):
-        super(ConvLSTMEnc, self).build(input_shape)
+        super(ConvLSTMencode, self).build(input_shape)
 
     def call(self, inputs):
 
@@ -138,7 +138,7 @@ class ConvLSTMdecode(tf.keras.layers.Layer):
 
     def build(self, input_shape):
         # self.kernel = self.add_weight(name='kernel', shape=(input_shape[1], self.output_dim),initializer='uniform',trainable=True)
-        super(ConvLSTMDec, self).build(input_shape)
+        super(ConvLSTMdecode, self).build(input_shape)
 
     def call(self, inputs):
 
@@ -162,9 +162,10 @@ class ConvLSTMdecode(tf.keras.layers.Layer):
 def convlstm(seq_size, img_height, img_width, droprate):
     model = Sequential(
         [
-            ConvLSTMEnc(droprate),
-            layers.ConvLSTM2D(64, 3, padding="same", return_sequences=True),
-            ConvLSTMDec(droprate),
+            ConvLSTMencode(droprate),
+            layers.TimeDistributed(
+            # layers.ConvLSTM2D(64, 3, padding="same", return_sequences=True),
+            ConvLSTMdecode(droprate),
             layers.TimeDistributed(
                 layers.Conv2DTranspose(2, 1, padding="same", activation="sigmoid")
             ),
@@ -176,9 +177,9 @@ def convlstm(seq_size, img_height, img_width, droprate):
 
 if __name__ == "__main__":
     # model = Sequential([
-    #    ConvLSTMEnc(0.1),
+    #    ConvLSTMencode(0.1),
     #    layers.ConvLSTM2D(64, 3, padding='same', return_sequences=True),
-    #    ConvLSTMDec(0.1),
+    #    ConvLSTMdecode(0.1),
     #    layers.TimeDistributed(layers.Conv2DTranspose(2, 1, padding='same', activation='sigmoid'))])
     # model = Unet_seq(40, 192, 192)
     model = convlstm(40, 192, 192, 0.1)
