@@ -25,6 +25,7 @@ from utils import video_summary
 from ConvLSTM_utils import convlstm
 from models import SegNetSeq
 from unet import Unet_seq
+import tqdm
 
 
 def parse():
@@ -150,7 +151,8 @@ EPOCHS = 150
 
 max_outputs = 4
 for epoch in range(EPOCHS):
-    for step, (x_train, y_train) in enumerate(train_ds.batch(batch_size)):
+    print(f"Training for epoch {epoch}")
+    for step, (x_train, y_train) in tqdm.tqdm(enumerate(train_ds.batch(batch_size))):
         train_step(model, optimizer, x_train, y_train)
         if step % max_steps_prct == 0:
             template = "Epoch {} {}%, Loss: {}, Pixel-Accuracy: {}%, MeanIoU: {}%, Mean F1: {}%"
@@ -216,7 +218,8 @@ for epoch in range(EPOCHS):
                 train_accuracy.reset_state()
                 train_meaniou.reset_state()
 
-    for (x_val, y_val) in val_ds.batch(batch_size):
+    print(f"Validation for epoch {epoch}")
+    for (x_val, y_val) in tqdm.tqdm(val_ds.batch(batch_size)):
         val_step(model, x_val, y_val)
     with val_summary_writer.as_default():
         tf.summary.scalar("loss", val_loss.result(), step=epoch * max_steps + step)

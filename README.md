@@ -16,8 +16,7 @@ with `uv` :
 ```bash
 uv venv venv
 source venv/bin/activate
-uv pip install scipy numpy tensorflow opencv-python-headless scikit-image
-
+uv pip install scipy numpy tensorflow[and-cuda] opencv-python-headless scikit-image tqdm
 ```
 
 ## Training a network
