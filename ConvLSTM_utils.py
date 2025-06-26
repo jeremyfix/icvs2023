@@ -1,4 +1,3 @@
-
 # for predicting knots from the contours of trees
 # Copyright (C) 2023 Anonymous
 
@@ -163,7 +162,6 @@ def convlstm(seq_size, img_height, img_width, droprate):
     model = Sequential(
         [
             ConvLSTMencode(droprate),
-            layers.TimeDistributed(
             # layers.ConvLSTM2D(64, 3, padding="same", return_sequences=True),
             ConvLSTMdecode(droprate),
             layers.TimeDistributed(
