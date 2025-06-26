@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import tensorflow as tf
-from tensorflow.keras import layers, Sequential
+from tensorflow.keras import layers, Sequential, Input, Model
 
 
 class ConvLSTMencode(tf.keras.layers.Layer):
@@ -158,18 +158,67 @@ class ConvLSTMdecode(tf.keras.layers.Layer):
         return x9
 
 
+# def convlstm(seq_size, img_height, img_width, droprate):
+#     model = Sequential(
+#         [
+#             ConvLSTMencode(droprate),
+#             layers.ConvLSTM2D(64, 3, padding="same", return_sequences=True),
+#             ConvLSTMdecode(droprate),
+#             layers.TimeDistributed(
+#                 layers.Conv2DTranspose(2, 1, padding="same", activation="sigmoid")
+#             ),
+#         ]
+#     )
+#     model.build((None, seq_size, img_height, img_width, 1))
+#     return model
+
+
 def convlstm(seq_size, img_height, img_width, droprate):
-    model = Sequential(
-        [
-            ConvLSTMencode(droprate),
-            # layers.ConvLSTM2D(64, 3, padding="same", return_sequences=True),
-            ConvLSTMdecode(droprate),
-            layers.TimeDistributed(
-                layers.Conv2DTranspose(2, 1, padding="same", activation="sigmoid")
-            ),
-        ]
-    )
-    model.build((None, seq_size, img_height, img_width, 1))
+
+    inputs = Input((seq_size, img_height, img_width, 1))
+
+    # Encoder
+    output = inputs
+    for num_c in [32, 48, 64]:
+        output = layers.ConvLSTM2D(
+            num_c,
+            3,
+            padding="same",
+            activation="relu",
+            return_sequences=True,
+            go_backwards=True,
+        )(output)
+        output = layers.ConvLSTM2D(
+            num_c,
+            3,
+            padding="same",
+            activation="relu",
+            return_sequences=True,
+            go_backwards=True,
+        )(output)
+        output = layers.TimeDistributed(layers.MaxPooling2D())(output)
+    output = layers.TimeDistributed(layers.Dropout(droprate))(output)
+
+    # Bottleneck
+    output = layers.ConvLSTM2D(64, 3, padding="same", return_sequences=True)(output)
+
+    # Decoder
+    output = layers.TimeDistributed(layers.Dropout(droprate))(output)
+    for num_c in [64, 48, 32]:
+        output = layers.TimeDistributed(layers.UpSampling2D())(output)
+        output = layers.TimeDistributed(
+            layers.Conv2DTranspose(num_c, 3, padding="same", activation="relu")
+        )(output)
+        output = layers.TimeDistributed(
+            layers.Conv2DTranspose(num_c, 3, padding="same", activation="relu")
+        )(output)
+
+    # Last :conv 1 x 1
+    output = layers.TimeDistributed(
+        layers.Conv2DTranspose(1, 1, padding="same", activation="sigmoid")
+    )(output)
+
+    model = Model(inputs=[inputs], outputs=[output], name="Test")
     return model
 
 
